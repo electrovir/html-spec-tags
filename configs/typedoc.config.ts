@@ -11,18 +11,4 @@ export const typeDocConfig: Partial<TypeDocOptions> = {
     entryPoints: [
         indexTsFile,
     ],
-    requiredToBeDocumented: [
-        'Accessor',
-        'Class',
-        'Constructor',
-        'Enum',
-        'Function',
-        'Interface',
-        'Method',
-        'Module',
-        'Namespace',
-        'Reference',
-        'TypeAlias',
-        'Variable',
-    ],
 };

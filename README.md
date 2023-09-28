@@ -1,20 +1,17 @@
 # html-spec-tags
 
-All HTML tags supported by the current spec. With types!
+All HTML and SVG tags supported by the current specs. With types!
 
-The list is generated from https://html.spec.whatwg.org/multipage/indices.html#elements-3 using the code in `extraction-script.js` (entered into the browser dev tools console).
+The lists are generated via scripts inside the included `extraction-scripts.js` file.
 
-Updated on Sep 27, 2023
+Updated on Sep 28, 2023
 
-# Usage
+## Installation
 
-This package exports two variables:
+```sh
+npm i html-spec-tags
+```
 
--   `htmlSpecConstructorsByTagName`
--   `allHtmlSpecTagNames`
+## Docs
 
-and one type:
-
--   `HtmlSpecTagName`
-
-Full docs: https://electrovir.github.io/html-spec-tags
+https://electrovir.github.io/html-spec-tags

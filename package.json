@@ -1,6 +1,6 @@
 {
     "name": "html-spec-tags",
-    "version": "0.0.2",
+    "version": "0.1.0",
     "description": "All HTML tags supported by the current spec. With types!",
     "keywords": [
         "html",
@@ -36,9 +36,11 @@
         "test:spelling": "virmator spellcheck",
         "test:types": "tsc --noEmit"
     },
+    "dependencies": {
+        "@augment-vir/common": "^19.1.0"
+    },
     "devDependencies": {
-        "@augment-vir/browser-testing": "^19.0.2",
-        "@augment-vir/common": "^19.0.2",
+        "@augment-vir/browser-testing": "^19.1.0",
         "@open-wc/testing": "^3.2.0",
         "@types/mocha": "^10.0.2",
         "@web/dev-server-esbuild": "^0.4.1",
@@ -46,9 +48,11 @@
         "@web/test-runner-commands": "^0.8.0",
         "@web/test-runner-playwright": "^0.10.1",
         "@web/test-runner-visual-regression": "^0.8.2",
-        "cspell": "^7.3.6",
+        "cspell": "^7.3.7",
+        "esbuild": "^0.19.4",
         "istanbul-smart-text-reporter": "^1.1.2",
         "markdown-code-example-inserter": "^0.3.2",
+        "npm-check-updates": "~16.12.3",
         "prettier": "^2.8.8",
         "prettier-plugin-interpolated-html-tags": "^0.0.4",
         "prettier-plugin-jsdoc": "^0.4.2",
@@ -60,6 +64,6 @@
         "type-fest": "^4.3.2",
         "typedoc": "^0.25.1",
         "typescript": "^5.2.2",
-        "virmator": "^8.0.1"
+        "virmator": "^8.0.3"
     }
 }
