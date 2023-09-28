@@ -16,3 +16,5 @@ This package exports two variables:
 and one type:
 
 -   `HtmlSpecTagName`
+
+Full docs: https://electrovir.github.io/html-spec-tags
