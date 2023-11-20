@@ -1,6 +1,7 @@
-import {assertTypeOf, itCases} from '@augment-vir/browser-testing';
+import {itCases} from '@augment-vir/browser-testing';
 import {ArrayElement} from '@augment-vir/common';
 import {assert} from '@open-wc/testing';
+import {assertTypeOf} from 'run-time-assertions';
 import {SvgSpecTagName, allSvgSpecTagNames, ensureSvgSpecTagName, isSvgSpecTagName} from './svg';
 
 describe('allSvgSpecTagNames', () => {

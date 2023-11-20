@@ -1,4 +1,4 @@
-import {isRuntimeTypeOf} from '@augment-vir/common';
+import {isRunTimeType} from 'run-time-assertions';
 
 /** A string literal type that only matches the HTML spec tag names. */
 export type HtmlSpecTagName = keyof typeof htmlSpecConstructorsByTagName;
@@ -126,14 +126,14 @@ export const allHtmlSpecTagNames: ReadonlyArray<HtmlSpecTagName> = Object.keys(
 
 /** Type guards the input as a valid HTML spec tag name. */
 export function isHtmlSpecTagName(input: unknown): input is HtmlSpecTagName {
-    return isRuntimeTypeOf(input, 'string') && input in htmlSpecConstructorsByTagName;
+    return isRunTimeType(input, 'string') && input in htmlSpecConstructorsByTagName;
 }
 
 /** Passes the input through if it's a valid HTML spec tag name, throws an error if not. */
 export function ensureHtmlSpecTagName(input: unknown): HtmlSpecTagName {
     if (isHtmlSpecTagName(input)) {
         return input;
-    } else if (!isRuntimeTypeOf(input, 'string')) {
+    } else if (!isRunTimeType(input, 'string')) {
         throw new Error(
             `'${JSON.stringify(input)}' is not a string, it cannot be a valid HtmlSpecTagName.`,
         );

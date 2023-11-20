@@ -1,6 +1,7 @@
-import {assertTypeOf, itCases} from '@augment-vir/browser-testing';
+import {itCases} from '@augment-vir/browser-testing';
 import {typedArrayIncludes} from '@augment-vir/common';
 import {assert} from '@open-wc/testing';
+import {assertTypeOf} from 'run-time-assertions';
 import {SpecTagName, allSpecTagNames, ensureSpecTagName, isSpecTagName} from './all-tags';
 import {HtmlSpecTagName, allHtmlSpecTagNames, isHtmlSpecTagName} from './html';
 import {SvgSpecTagName, allSvgSpecTagNames, isSvgSpecTagName} from './svg';

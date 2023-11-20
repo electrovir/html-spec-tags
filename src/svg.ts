@@ -1,4 +1,5 @@
-import {isRuntimeTypeOf, typedArrayIncludes} from '@augment-vir/common';
+import {typedArrayIncludes} from '@augment-vir/common';
+import {isRunTimeType} from 'run-time-assertions';
 
 /** A string literal type that only matches the SVG spec tag names. */
 export type SvgSpecTagName = (typeof allSvgSpecTagNames)[number];
@@ -85,7 +86,7 @@ export function isSvgSpecTagName(input: unknown): input is SvgSpecTagName {
 export function ensureSvgSpecTagName(input: unknown): SvgSpecTagName {
     if (isSvgSpecTagName(input)) {
         return input;
-    } else if (!isRuntimeTypeOf(input, 'string')) {
+    } else if (!isRunTimeType(input, 'string')) {
         throw new Error(
             `'${JSON.stringify(input)}' is not a string, it cannot be a valid SvgSpecTagName.`,
         );

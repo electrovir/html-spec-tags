@@ -1,4 +1,4 @@
-import {isRuntimeTypeOf} from '@augment-vir/common';
+import {isRunTimeType} from 'run-time-assertions';
 import {HtmlSpecTagName, allHtmlSpecTagNames, isHtmlSpecTagName} from './html';
 import {SvgSpecTagName, allSvgSpecTagNames, isSvgSpecTagName} from './svg';
 
@@ -20,7 +20,7 @@ export function isSpecTagName(input: unknown): input is SpecTagName {
 export function ensureSpecTagName(input: unknown): SpecTagName {
     if (isSpecTagName(input)) {
         return input;
-    } else if (!isRuntimeTypeOf(input, 'string')) {
+    } else if (!isRunTimeType(input, 'string')) {
         throw new Error(
             `'${JSON.stringify(input)}' is not a string, it cannot be a valid SpecTagName.`,
         );
