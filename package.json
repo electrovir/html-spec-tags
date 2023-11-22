@@ -1,6 +1,6 @@
 {
     "name": "html-spec-tags",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "All HTML tags supported by the current spec. With types!",
     "keywords": [
         "html",

@@ -27,7 +27,6 @@ export const htmlSpecConstructorsByTagName = {
     col: HTMLTableColElement,
     colgroup: HTMLTableColElement,
     data: HTMLDataElement,
-    datalist: HTMLDataListElement,
     dd: HTMLElement,
     del: HTMLModElement,
     details: HTMLDetailsElement,
