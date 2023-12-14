@@ -13,6 +13,11 @@ import {
 describe('htmlSpecConstructorsByTagName', () => {
     it('has all HTMLElement subclasses for values', () => {
         Object.values(htmlSpecConstructorsByTagName).forEach((elementConstructor) => {
+            /** Ignore sub-classes that don't exist in the current runtime. */
+            if (elementConstructor == undefined) {
+                return;
+            }
+
             assert.isTrue(
                 elementConstructor.prototype instanceof HTMLElement ||
                     elementConstructor === HTMLElement,
