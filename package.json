@@ -67,9 +67,5 @@
         "typedoc": "^0.25.8",
         "typescript": "5.3.3",
         "virmator": "^11.3.3"
-    },
-    "overrides": {
-        "@open-wc/testing-helpers": "2.3.0",
-        "@open-wc/scoped-elements": "2.2.3"
     }
 }
