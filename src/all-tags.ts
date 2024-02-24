@@ -1,9 +1,9 @@
-import {isTruthy, typedArrayIncludes, wrapInTry} from '@augment-vir/common';
+import {PropertyValueType, isTruthy, typedArrayIncludes, wrapInTry} from '@augment-vir/common';
 import {AssertionError, assertRunTimeType, isRunTimeType} from 'run-time-assertions';
-import {Constructor} from 'type-fest';
 import {HtmlSpecTagName, allHtmlSpecTagNames, htmlSpecConstructorsByTagName} from './html';
 import {MathmlSpecTagName, allMathmlSpecTagNames, mathmlSpecConstructorsByTagName} from './mathml';
 import {SvgSpecTagName, allSvgSpecTagNames, svgSpecConstructorsByTagName} from './svg';
+import {specTagNameByConstructor} from './tag-name-by-constructor';
 
 /** All possible spec tag names in a single array. */
 export const allSpecTagNames: ReadonlyArray<SpecTagName> = Array.from(
@@ -19,6 +19,12 @@ export const allSpecTagNames: ReadonlyArray<SpecTagName> = Array.from(
 /** Any valid spec tag name. */
 export type SpecTagName = HtmlSpecTagName | SvgSpecTagName | MathmlSpecTagName;
 
+/** Any of the possible spec tag name constructors. */
+export type SpecTagNameConstructor =
+    | PropertyValueType<typeof htmlSpecConstructorsByTagName>
+    | PropertyValueType<typeof mathmlSpecConstructorsByTagName>
+    | PropertyValueType<typeof svgSpecConstructorsByTagName>;
+
 /**
  * Get the constructor for the given tag name. Since there are some duplicate tag names, the
  * priority is:
@@ -31,7 +37,7 @@ export type SpecTagName = HtmlSpecTagName | SvgSpecTagName | MathmlSpecTagName;
  * returned. If the lower priority tag constructor is desired these types of situations, use its
  * constructor list directly. For example,use `svgSpecConstructorsByTagName` directly.
  */
-export function getSpecTagNameConstructor(tagName: SpecTagName): Constructor<Element> {
+export function getSpecTagNameConstructor(tagName: SpecTagName): SpecTagNameConstructor {
     const constructor =
         htmlSpecConstructorsByTagName[tagName as HtmlSpecTagName] ||
         svgSpecConstructorsByTagName[tagName as SvgSpecTagName] ||
@@ -85,4 +91,18 @@ export function ensureSpecTagName(input: unknown): SpecTagName {
     } else {
         throw new Error(`'${input}' is not a valid tag name.`);
     }
+}
+
+/**
+ * Get a spec tag name from the given constructor. Note that some constructors match multiple tags
+ * so you might get an unexpected output here.
+ */
+export function getSpecTagNameFromConstructor(constructor: SpecTagNameConstructor): SpecTagName {
+    const tagName = specTagNameByConstructor.get(constructor);
+
+    if (!tagName) {
+        throw new TypeError(`'${constructor.name}' is not a valid spec tag name constructor.`);
+    }
+
+    return tagName;
 }

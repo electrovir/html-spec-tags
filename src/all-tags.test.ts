@@ -1,19 +1,21 @@
-import {itCases} from '@augment-vir/browser-testing';
-import {typedArrayIncludes} from '@augment-vir/common';
+import {FunctionTestCase, itCases} from '@augment-vir/browser-testing';
+import {getObjectTypedEntries, typedArrayIncludes} from '@augment-vir/common';
 import {assert} from '@open-wc/testing';
 import {AssertionError, assertTypeOf} from 'run-time-assertions';
 import {
     SpecTagName,
+    SpecTagNameConstructor,
     allSpecTagNames,
     assertSpecTagName,
     ensureSpecTagName,
     getSpecTagNameConstructor,
+    getSpecTagNameFromConstructor,
     isSpecTagName,
 } from './all-tags';
 import {isHtmlSpecTagName, isMathmlSpecTagName, isSvgSpecTagName} from './assertions';
-import {HtmlSpecTagName, allHtmlSpecTagNames} from './html';
-import {allMathmlSpecTagNames} from './mathml';
-import {SvgSpecTagName, allSvgSpecTagNames} from './svg';
+import {HtmlSpecTagName, allHtmlSpecTagNames, htmlSpecConstructorsByTagName} from './html';
+import {allMathmlSpecTagNames, mathmlSpecConstructorsByTagName} from './mathml';
+import {SvgSpecTagName, allSvgSpecTagNames, svgSpecConstructorsByTagName} from './svg';
 
 describe('SpecTagName', () => {
     it('matches SVG and HTML spec tag names', () => {
@@ -134,5 +136,40 @@ describe(getSpecTagNameConstructor.name, () => {
             input: 'not a valid tag',
             throws: TypeError,
         },
+    ]);
+});
+describe(getSpecTagNameFromConstructor.name, () => {
+    const constructorEntries: [SpecTagName, SpecTagNameConstructor][] = [
+        getObjectTypedEntries(htmlSpecConstructorsByTagName),
+        getObjectTypedEntries(mathmlSpecConstructorsByTagName),
+        getObjectTypedEntries(svgSpecConstructorsByTagName),
+    ].flat();
+
+    assert.isAbove(constructorEntries.length, 0, 'needs some test cases');
+
+    const constructorEntryTestCases: ReadonlyArray<
+        FunctionTestCase<typeof getSpecTagNameFromConstructor>
+    > = constructorEntries.map(
+        ([
+            tagName,
+            constructor,
+        ]) => {
+            return {
+                it: `works for '${constructor.name}'`,
+                input: constructor,
+                /** Don't compare the tag name because some constructors match multiple tag names. */
+                throws: undefined,
+            };
+        },
+    );
+
+    itCases(getSpecTagNameFromConstructor, [
+        {
+            it: 'errors on invalid constructor',
+            // @ts-expect-error: intentionally use invalid constructor
+            input: RegExp,
+            throws: TypeError,
+        },
+        ...constructorEntryTestCases,
     ]);
 });
