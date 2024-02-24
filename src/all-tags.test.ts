@@ -7,6 +7,7 @@ import {
     allSpecTagNames,
     assertSpecTagName,
     ensureSpecTagName,
+    getTagNameConstructor,
     isSpecTagName,
 } from './all-tags';
 import {isHtmlSpecTagName, isMathmlSpecTagName, isSvgSpecTagName} from './assertions';
@@ -103,4 +104,35 @@ describe('spec tag name assertions', () => {
             } as const;
         }),
     );
+});
+
+describe(getTagNameConstructor.name, () => {
+    itCases(getTagNameConstructor, [
+        {
+            it: 'gets an HTMLElement constructor',
+            input: 'span',
+            expect: HTMLSpanElement,
+        },
+        {
+            it: 'gets an SVGElement constructor',
+            input: 'g',
+            expect: SVGGElement,
+        },
+        {
+            it: 'gets a MathMLElement constructor',
+            input: 'mo',
+            expect: MathMLElement,
+        },
+        {
+            it: 'gets the HTMLElement constructor version of a tag',
+            input: 'a',
+            expect: HTMLAnchorElement,
+        },
+        {
+            it: 'rejects an invalid tag',
+            // @ts-expect-error: this is intentionally not a valid tag
+            input: 'not a valid tag',
+            throws: TypeError,
+        },
+    ]);
 });

@@ -1,8 +1,9 @@
 import {isTruthy, typedArrayIncludes, wrapInTry} from '@augment-vir/common';
 import {AssertionError, assertRunTimeType, isRunTimeType} from 'run-time-assertions';
-import {HtmlSpecTagName, allHtmlSpecTagNames} from './html';
-import {MathmlSpecTagName, allMathmlSpecTagNames} from './mathml';
-import {SvgSpecTagName, allSvgSpecTagNames} from './svg';
+import {Constructor} from 'type-fest';
+import {HtmlSpecTagName, allHtmlSpecTagNames, htmlSpecConstructorsByTagName} from './html';
+import {MathmlSpecTagName, allMathmlSpecTagNames, mathmlSpecConstructorsByTagName} from './mathml';
+import {SvgSpecTagName, allSvgSpecTagNames, svgSpecConstructorsByTagName} from './svg';
 
 /** All possible spec tag names in a single array. */
 export const allSpecTagNames: ReadonlyArray<SpecTagName> = Array.from(
@@ -17,6 +18,31 @@ export const allSpecTagNames: ReadonlyArray<SpecTagName> = Array.from(
 
 /** Any valid spec tag name. */
 export type SpecTagName = HtmlSpecTagName | SvgSpecTagName | MathmlSpecTagName;
+
+/**
+ * Get the constructor for the given tag name. Since there are some duplicate tag names, the
+ * priority is:
+ *
+ * 1. HTML tags
+ * 2. SVG tags
+ * 3. MathML tags
+ *
+ * Meaning, if a tag name is duplicated between HTML and SVG tags, the HTML constructor will be
+ * returned. If the lower priority tag constructor is desired these types of situations, use its
+ * constructor list directly. For example,use `svgSpecConstructorsByTagName` directly.
+ */
+export function getTagNameConstructor(tagName: SpecTagName): Constructor<Element> {
+    const constructor =
+        htmlSpecConstructorsByTagName[tagName as HtmlSpecTagName] ||
+        svgSpecConstructorsByTagName[tagName as SvgSpecTagName] ||
+        mathmlSpecConstructorsByTagName[tagName as MathmlSpecTagName];
+
+    if (!constructor) {
+        throw new TypeError(`Found no constructor for tag name '${tagName}'`);
+    }
+
+    return constructor;
+}
 
 /** Type guards the input as a valid spec tag name. */
 export function isSpecTagName(input: unknown): input is SpecTagName {
