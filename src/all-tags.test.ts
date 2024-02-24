@@ -7,7 +7,7 @@ import {
     allSpecTagNames,
     assertSpecTagName,
     ensureSpecTagName,
-    getTagNameConstructor,
+    getSpecTagNameConstructor,
     isSpecTagName,
 } from './all-tags';
 import {isHtmlSpecTagName, isMathmlSpecTagName, isSvgSpecTagName} from './assertions';
@@ -106,8 +106,8 @@ describe('spec tag name assertions', () => {
     );
 });
 
-describe(getTagNameConstructor.name, () => {
-    itCases(getTagNameConstructor, [
+describe(getSpecTagNameConstructor.name, () => {
+    itCases(getSpecTagNameConstructor, [
         {
             it: 'gets an HTMLElement constructor',
             input: 'span',

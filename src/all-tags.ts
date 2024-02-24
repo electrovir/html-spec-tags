@@ -31,7 +31,7 @@ export type SpecTagName = HtmlSpecTagName | SvgSpecTagName | MathmlSpecTagName;
  * returned. If the lower priority tag constructor is desired these types of situations, use its
  * constructor list directly. For example,use `svgSpecConstructorsByTagName` directly.
  */
-export function getTagNameConstructor(tagName: SpecTagName): Constructor<Element> {
+export function getSpecTagNameConstructor(tagName: SpecTagName): Constructor<Element> {
     const constructor =
         htmlSpecConstructorsByTagName[tagName as HtmlSpecTagName] ||
         svgSpecConstructorsByTagName[tagName as SvgSpecTagName] ||
