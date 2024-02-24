@@ -1,10 +1,10 @@
 # html-spec-tags
 
-All HTML and SVG tags supported by the current specs. With types!
+All HTML, SVG, and MathML tags and their constructor as supported by current specs. With types!
 
-The lists are generated via scripts inside the included `extraction-scripts.js` file.
+Each list is generated from Typescript's [`lib.dom.d.ts` types](https://raw.githubusercontent.com/microsoft/TypeScript/main/src/lib/dom.generated.d.ts) (from `HTMLElementTagNameMap`, `SVGElementTagNameMap`, `MathMLElementTagNameMap`, respectively).
 
-Updated on Sep 28, 2023
+List contents last updated on Feb 24, 2024.
 
 ## Installation
 

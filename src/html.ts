@@ -1,9 +1,14 @@
-import {isRunTimeType} from 'run-time-assertions';
+import {Constructor} from 'type-fest';
 
 /** A string literal type that only matches the HTML spec tag names. */
 export type HtmlSpecTagName = keyof typeof htmlSpecConstructorsByTagName;
 
-/** A mapping of all HTML spec tag names to their respective element classes. */
+/**
+ * All current HTML spec tag names mapped to their respective element constructors.
+ *
+ * Generated from `HTMLElementTagNameMap` in `typescript/lib/lib.dom.d.ts`:
+ * https://raw.githubusercontent.com/microsoft/TypeScript/main/src/lib/dom.generated.d.ts
+ */
 export const htmlSpecConstructorsByTagName = {
     a: window.HTMLAnchorElement,
     abbr: window.HTMLElement,
@@ -117,27 +122,9 @@ export const htmlSpecConstructorsByTagName = {
     var: window.HTMLElement,
     video: window.HTMLVideoElement,
     wbr: window.HTMLElement,
-} as const;
+} as const satisfies Readonly<Record<string, Constructor<HTMLElement>>>;
 
 /** All possible HTML spec tag names within a single array. */
 export const allHtmlSpecTagNames: ReadonlyArray<HtmlSpecTagName> = Object.keys(
     htmlSpecConstructorsByTagName,
 ) as ReadonlyArray<HtmlSpecTagName>;
-
-/** Type guards the input as a valid HTML spec tag name. */
-export function isHtmlSpecTagName(input: unknown): input is HtmlSpecTagName {
-    return isRunTimeType(input, 'string') && input in htmlSpecConstructorsByTagName;
-}
-
-/** Passes the input through if it's a valid HTML spec tag name, throws an error if not. */
-export function ensureHtmlSpecTagName(input: unknown): HtmlSpecTagName {
-    if (isHtmlSpecTagName(input)) {
-        return input;
-    } else if (!isRunTimeType(input, 'string')) {
-        throw new Error(
-            `'${JSON.stringify(input)}' is not a string, it cannot be a valid HtmlSpecTagName.`,
-        );
-    } else {
-        throw new Error(`'${input}' is not a valid HtmlSpecTagName.`);
-    }
-}

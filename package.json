@@ -1,9 +1,11 @@
 {
     "name": "html-spec-tags",
-    "version": "1.0.4",
+    "version": "2.0.0",
     "description": "All HTML tags supported by the current spec. With types!",
     "keywords": [
         "html",
+        "svg",
+        "mathml",
         "spec",
         "tag",
         "element"
@@ -65,7 +67,7 @@
         "prettier-plugin-toml": "^2.0.1",
         "type-fest": "^4.10.3",
         "typedoc": "^0.25.8",
-        "typescript": "5.3.3",
+        "typescript": "^5.3.3",
         "virmator": "^11.4.0"
     }
 }

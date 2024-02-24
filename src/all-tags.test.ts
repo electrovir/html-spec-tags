@@ -1,10 +1,18 @@
 import {itCases} from '@augment-vir/browser-testing';
 import {typedArrayIncludes} from '@augment-vir/common';
 import {assert} from '@open-wc/testing';
-import {assertTypeOf} from 'run-time-assertions';
-import {SpecTagName, allSpecTagNames, ensureSpecTagName, isSpecTagName} from './all-tags';
-import {HtmlSpecTagName, allHtmlSpecTagNames, isHtmlSpecTagName} from './html';
-import {SvgSpecTagName, allSvgSpecTagNames, isSvgSpecTagName} from './svg';
+import {AssertionError, assertTypeOf} from 'run-time-assertions';
+import {
+    SpecTagName,
+    allSpecTagNames,
+    assertSpecTagName,
+    ensureSpecTagName,
+    isSpecTagName,
+} from './all-tags';
+import {isHtmlSpecTagName, isMathmlSpecTagName, isSvgSpecTagName} from './assertions';
+import {HtmlSpecTagName, allHtmlSpecTagNames} from './html';
+import {allMathmlSpecTagNames} from './mathml';
+import {SvgSpecTagName, allSvgSpecTagNames} from './svg';
 
 describe('SpecTagName', () => {
     it('matches SVG and HTML spec tag names', () => {
@@ -18,73 +26,81 @@ describe('allSpecTagNames', () => {
         allSpecTagNames.forEach((tagName) => {
             const included =
                 typedArrayIncludes(allHtmlSpecTagNames, tagName) ||
+                typedArrayIncludes(allMathmlSpecTagNames, tagName) ||
                 typedArrayIncludes(allSvgSpecTagNames, tagName);
             assert.isTrue(included, `${tagName} was not found in all HTML or SVG tag names.`);
 
-            const matches = isHtmlSpecTagName(tagName) || isSvgSpecTagName(tagName);
-
+            const matches =
+                isHtmlSpecTagName(tagName) ||
+                isSvgSpecTagName(tagName) ||
+                isMathmlSpecTagName(tagName);
             assert.isTrue(matches, `${tagName} is not a valid HTML or SVG tag name.`);
         });
     });
 });
 
-describe(isSpecTagName.name, () => {
+describe('spec tag name assertions', () => {
     it('passes all entries in allSpecTagNames', () => {
         allSpecTagNames.forEach((entry) => {
             assert.isTrue(isSpecTagName(entry), `${entry} should be a valid spec tag`);
+            assertSpecTagName(entry);
+            assertSpecTagName(ensureSpecTagName(entry));
         });
     });
 
-    itCases(isSpecTagName, [
+    const testCases: ReadonlyArray<Readonly<{input: unknown; valid: boolean}>> = [
         {
-            it: 'fails on a random string',
-            input: 'hello there',
-            expect: false,
-        },
-        {
-            it: 'accepts a valid raw HTML tag name string',
             input: 'img',
-            expect: true,
+            valid: true,
         },
         {
-            it: 'accepts a valid raw SVG tag name string',
             input: 'ellipse',
-            expect: true,
+            valid: true,
         },
-    ]);
-});
-
-describe(ensureSpecTagName.name, () => {
-    it('passes through all entries in allSpecTagNames', () => {
-        allSpecTagNames.forEach((entry) => {
-            assert.strictEqual(
-                ensureSpecTagName(entry),
-                entry,
-                `${entry} should be pass through ${ensureSpecTagName.name}`,
-            );
-        });
-    });
-
-    itCases(ensureSpecTagName, [
         {
-            it: 'fails on a random string',
+            input: 'mo',
+            valid: true,
+        },
+        {
             input: 'hello there',
-            throws: Error,
+            valid: false,
         },
         {
-            it: 'fails on a non-string',
-            input: {not: 'a string'},
-            throws: Error,
+            input: {tagName: 'mo'},
+            valid: false,
         },
-        {
-            it: 'accepts a valid raw HTML tag name string',
-            input: 'img',
-            expect: 'img',
-        },
-        {
-            it: 'accepts a valid raw SVG tag name string',
-            input: 'ellipse',
-            expect: 'ellipse',
-        },
-    ]);
+    ];
+
+    itCases(
+        isSpecTagName,
+        testCases.map((testCase) => {
+            return {
+                it: testCase.valid ? `accepts '${testCase.input}'` : `rejects '${testCase.input}'`,
+                input: testCase.input,
+                expect: testCase.valid,
+            } as const;
+        }),
+    );
+
+    itCases(
+        assertSpecTagName,
+        testCases.map((testCase) => {
+            return {
+                it: testCase.valid ? `accepts '${testCase.input}'` : `rejects '${testCase.input}'`,
+                inputs: [testCase.input],
+                throws: testCase.valid ? undefined : AssertionError,
+            } as const;
+        }),
+    );
+
+    itCases(
+        ensureSpecTagName,
+        testCases.map((testCase) => {
+            return {
+                it: testCase.valid ? `accepts '${testCase.input}'` : `rejects '${testCase.input}'`,
+                input: testCase.input,
+                throws: testCase.valid ? undefined : Error,
+            } as const;
+        }),
+    );
 });
