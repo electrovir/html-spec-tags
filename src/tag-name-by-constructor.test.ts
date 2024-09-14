@@ -1,4 +1,4 @@
-import {assert} from '@augment-vir/assert';
+import {assert, check} from '@augment-vir/assert';
 import {getObjectTypedEntries} from '@augment-vir/common';
 import {describe, itCases, type FunctionTestCase} from '@augment-vir/test';
 import {SpecTagName, type SpecTagNameConstructor} from './all-tags.js';
@@ -17,16 +17,23 @@ describe(getSpecTagNameFromConstructor.name, () => {
     assert.isAbove(constructorEntries.length, 0, 'needs some test cases');
 
     const constructorEntryTestCases: ReadonlyArray<
-        FunctionTestCase<typeof getSpecTagNameFromConstructor>
+        FunctionTestCase<typeof getSpecTagNameFromConstructor> | undefined
     > = constructorEntries.map(
         ([
             tagName,
             constructor,
         ]) => {
+            if (!(constructor as SpecTagNameConstructor | undefined)) {
+                /** Some of the constructors don't exist in some tested run times. */
+                return undefined;
+            }
             return {
+                /**
+                 * Don't interpolate the tag name because some constructors match multiple tag
+                 * names.
+                 */
                 it: `works for '${constructor.name}'`,
                 input: constructor,
-                /** Don't compare the tag name because some constructors match multiple tag names. */
                 throws: undefined,
             };
         },
@@ -39,6 +46,6 @@ describe(getSpecTagNameFromConstructor.name, () => {
             input: RegExp,
             throws: {matchConstructor: TypeError},
         },
-        ...constructorEntryTestCases,
+        ...constructorEntryTestCases.filter(check.isTruthy),
     ]);
 });
