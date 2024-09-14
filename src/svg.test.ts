@@ -1,13 +1,13 @@
+import {assert} from '@augment-vir/assert';
 import {ArrayElement} from '@augment-vir/common';
-import {assert} from '@open-wc/testing';
-import {assertTypeOf} from 'run-time-assertions';
-import {SvgSpecTagName, allSvgSpecTagNames, svgSpecConstructorsByTagName} from './svg';
+import {describe, it} from '@augment-vir/test';
+import {SvgSpecTagName, allSvgSpecTagNames, svgSpecConstructorsByTagName} from './svg.js';
 
 describe('svgSpecConstructorsByTagName', () => {
     it('has all SVGElement subclasses for values', () => {
         Object.values(svgSpecConstructorsByTagName).forEach((elementConstructor) => {
             /** Ignore sub-classes that don't exist in the current runtime. */
-            if (elementConstructor == undefined) {
+            if ((elementConstructor as typeof elementConstructor | undefined) == undefined) {
                 return;
             }
 
@@ -21,18 +21,18 @@ describe('svgSpecConstructorsByTagName', () => {
     it('has strict value types', () => {
         const spanConstructor = svgSpecConstructorsByTagName['g'];
 
-        assertTypeOf(spanConstructor).toEqualTypeOf(SVGGElement);
-        assert.strictEqual(spanConstructor, SVGGElement);
+        assert.tsType(spanConstructor).equals(SVGGElement);
+        assert.strictEquals(spanConstructor, SVGGElement);
     });
 });
 
 describe('allSvgSpecTagNames', () => {
     it('has only keys from svgSpecConstructorsByTagName', () => {
-        assert.hasAllKeys(svgSpecConstructorsByTagName, allSvgSpecTagNames);
+        assert.hasKeys(svgSpecConstructorsByTagName, allSvgSpecTagNames);
     });
 
     it('matches SvgSpecTagName', () => {
-        assertTypeOf<ArrayElement<typeof allSvgSpecTagNames>>().toEqualTypeOf<SvgSpecTagName>();
+        assert.tsType<ArrayElement<typeof allSvgSpecTagNames>>().equals<SvgSpecTagName>();
     });
 });
 
@@ -44,8 +44,8 @@ describe('SvgSpecTagName', () => {
     });
 
     it('is not just plain string type', () => {
-        assertTypeOf<SvgSpecTagName>().not.toEqualTypeOf<string>();
+        assert.tsType<SvgSpecTagName>().notEquals<string>();
         // but it is a subset of string
-        assertTypeOf<SvgSpecTagName>().toMatchTypeOf<string>();
+        assert.tsType<SvgSpecTagName>().matches<string>();
     });
 });

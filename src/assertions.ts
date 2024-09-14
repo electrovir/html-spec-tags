@@ -1,9 +1,9 @@
-import {isTruthy, wrapInTry} from '@augment-vir/common';
-import {AssertionError, assertRunTimeType, isRunTimeType} from 'run-time-assertions';
+import {assert, AssertionError, check} from '@augment-vir/assert';
+import {wrapInTry} from '@augment-vir/common';
 import {Constructor} from 'type-fest';
-import {htmlSpecConstructorsByTagName} from './html';
-import {mathmlSpecConstructorsByTagName} from './mathml';
-import {svgSpecConstructorsByTagName} from './svg';
+import {htmlSpecConstructorsByTagName} from './html.js';
+import {mathmlSpecConstructorsByTagName} from './mathml.js';
+import {svgSpecConstructorsByTagName} from './svg.js';
 
 type SpecAsserter<ConstructorMap extends Readonly<Record<string, Constructor<Element>>>> = (
     input: unknown,
@@ -15,42 +15,40 @@ function createAsserters<ConstructorMap extends Readonly<Record<string, Construc
     name: string,
 ) {
     function assertTypeGuard(input: unknown, failureMessage?: string | undefined): void {
-        assertRunTimeType(input, 'string', failureMessage);
+        assert.isString(input, failureMessage);
 
         if (!(input in constructorMap)) {
             throw new AssertionError(
-                [
-                    `'${input}' is not a ${name} element tag name`,
-                    failureMessage,
-                ]
-                    .filter(isTruthy)
-                    .join(': '),
+                `'${input}' is not a ${name} element tag name`,
+                failureMessage,
             );
         }
     }
 
     function typeGuard(input: unknown): input is keyof ConstructorMap {
-        return wrapInTry({
-            callback() {
+        return wrapInTry(
+            () => {
                 assertTypeGuard(input);
                 return true;
             },
-            fallbackValue: false,
-        });
+            {
+                fallbackValue: false,
+            },
+        );
     }
 
     return {
         typeGuard,
         assertTypeGuard,
-        ensureTypeGuard(input: unknown): keyof ConstructorMap {
+        ensureTypeGuard(this: void, input: unknown): keyof ConstructorMap {
             if (typeGuard(input)) {
                 return input;
-            } else if (!isRunTimeType(input, 'string')) {
-                throw new Error(
+            } else if (check.isString(input)) {
+                throw new TypeError(`'${input}' is not a valid ${name} tag name.`);
+            } else {
+                throw new TypeError(
                     `'${JSON.stringify(input)}' is not a string, it cannot be a valid ${name} tag name.`,
                 );
-            } else {
-                throw new Error(`'${input}' is not a valid ${name} tag name.`);
             }
         },
     };

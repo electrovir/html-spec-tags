@@ -1,13 +1,13 @@
+import {assert} from '@augment-vir/assert';
 import {ArrayElement} from '@augment-vir/common';
-import {assert} from '@open-wc/testing';
-import {assertTypeOf} from 'run-time-assertions';
-import {HtmlSpecTagName, allHtmlSpecTagNames, htmlSpecConstructorsByTagName} from './html';
+import {describe, it} from '@augment-vir/test';
+import {HtmlSpecTagName, allHtmlSpecTagNames, htmlSpecConstructorsByTagName} from './html.js';
 
 describe('htmlSpecConstructorsByTagName', () => {
     it('has all HTMLElement subclasses for values', () => {
         Object.values(htmlSpecConstructorsByTagName).forEach((elementConstructor) => {
             /** Ignore sub-classes that don't exist in the current runtime. */
-            if (elementConstructor == undefined) {
+            if ((elementConstructor as typeof elementConstructor | undefined) == undefined) {
                 return;
             }
 
@@ -22,18 +22,18 @@ describe('htmlSpecConstructorsByTagName', () => {
     it('has strict value types', () => {
         const spanConstructor = htmlSpecConstructorsByTagName['span'];
 
-        assertTypeOf(spanConstructor).toEqualTypeOf(HTMLSpanElement);
-        assert.strictEqual(spanConstructor, HTMLSpanElement);
+        assert.tsType(spanConstructor).equals(HTMLSpanElement);
+        assert.strictEquals(spanConstructor, HTMLSpanElement);
     });
 });
 
 describe('allHtmlSpecTagNames', () => {
     it('has only keys from htmlSpecConstructorsByTagName', () => {
-        assert.hasAllKeys(htmlSpecConstructorsByTagName, allHtmlSpecTagNames);
+        assert.hasKeys(htmlSpecConstructorsByTagName, allHtmlSpecTagNames);
     });
 
     it('matches HtmlSpecTagName', () => {
-        assertTypeOf<ArrayElement<typeof allHtmlSpecTagNames>>().toEqualTypeOf<HtmlSpecTagName>();
+        assert.tsType<ArrayElement<typeof allHtmlSpecTagNames>>().equals<HtmlSpecTagName>();
     });
 });
 
@@ -45,8 +45,8 @@ describe('HtmlSpecTagName', () => {
     });
 
     it('is not just plain string type', () => {
-        assertTypeOf<HtmlSpecTagName>().not.toEqualTypeOf<string>();
+        assert.tsType<HtmlSpecTagName>().notEquals<string>();
         // but it is a subset of string
-        assertTypeOf<HtmlSpecTagName>().toMatchTypeOf<string>();
+        assert.tsType<HtmlSpecTagName>().matches<string>();
     });
 });

@@ -1,6 +1,6 @@
-import {getObjectTypedEntries} from '@augment-vir/common';
-import {assert} from '@open-wc/testing';
-import {assertThrows, assertTypeOf} from 'run-time-assertions';
+import {assert} from '@augment-vir/assert';
+import {getObjectTypedEntries, stringify} from '@augment-vir/common';
+import {describe, it} from '@augment-vir/test';
 import {Constructor} from 'type-fest';
 import {
     assertHtmlSpecTagName,
@@ -12,13 +12,13 @@ import {
     isHtmlSpecTagName,
     isMathmlSpecTagName,
     isSvgSpecTagName,
-} from './assertions';
-import {HtmlSpecTagName, htmlSpecConstructorsByTagName} from './html';
-import {MathmlSpecTagName, mathmlSpecConstructorsByTagName} from './mathml';
-import {SvgSpecTagName, svgSpecConstructorsByTagName} from './svg';
+} from './assertions.js';
+import {HtmlSpecTagName, htmlSpecConstructorsByTagName} from './html.js';
+import {MathmlSpecTagName, mathmlSpecConstructorsByTagName} from './mathml.js';
+import {SvgSpecTagName, svgSpecConstructorsByTagName} from './svg.js';
 
 type TestCase = {
-    tag: unknown;
+    tag: string | {not: string};
     valid: boolean;
 };
 
@@ -97,15 +97,15 @@ describe('tag assertions', () => {
                 });
 
                 testInfo.testCases.forEach((testCase) => {
-                    it(`${testCase.valid ? 'accepts' : 'rejects'} ${testCase.tag}`, () => {
+                    it(`${testCase.valid ? 'accepts' : 'rejects'} ${stringify(testCase.tag)}`, () => {
                         if (testCase.valid) {
                             assert.isTrue(testInfo.typeGuard(testCase.tag));
                             testInfo.asserter(testCase.tag);
                             testInfo.asserter(testInfo.ensurer(testCase.tag));
                         } else {
                             assert.isFalse(testInfo.typeGuard(testCase.tag));
-                            assertThrows(() => testInfo.asserter(testCase.tag));
-                            assertThrows(() => testInfo.ensurer(testCase.tag));
+                            assert.throws(() => testInfo.asserter(testCase.tag));
+                            assert.throws(() => testInfo.ensurer(testCase.tag));
                         }
                     });
                 });
@@ -115,37 +115,37 @@ describe('tag assertions', () => {
 
     it('properly type guards SVG tags', () => {
         const tagName = 'feMorphology' as string;
-        assertTypeOf(ensureSvgSpecTagName(tagName)).toEqualTypeOf<SvgSpecTagName>();
+        assert.tsType(ensureSvgSpecTagName(tagName)).equals<SvgSpecTagName>();
         if (isSvgSpecTagName(tagName)) {
-            assertTypeOf(tagName).toEqualTypeOf<SvgSpecTagName>();
+            assert.tsType(tagName).equals<SvgSpecTagName>();
         } else {
-            assertTypeOf(tagName).not.toEqualTypeOf<SvgSpecTagName>();
+            assert.tsType(tagName).notEquals<SvgSpecTagName>();
         }
         assertSvgSpecTagName(tagName);
-        assertTypeOf(tagName).toEqualTypeOf<SvgSpecTagName>();
+        assert.tsType(tagName).equals<SvgSpecTagName>();
     });
 
     it('properly type guards HTML tags', () => {
         const tagName = 'summary' as string;
-        assertTypeOf(ensureHtmlSpecTagName(tagName)).toEqualTypeOf<HtmlSpecTagName>();
+        assert.tsType(ensureHtmlSpecTagName(tagName)).equals<HtmlSpecTagName>();
         if (isHtmlSpecTagName(tagName)) {
-            assertTypeOf(tagName).toEqualTypeOf<HtmlSpecTagName>();
+            assert.tsType(tagName).equals<HtmlSpecTagName>();
         } else {
-            assertTypeOf(tagName).not.toEqualTypeOf<HtmlSpecTagName>();
+            assert.tsType(tagName).notEquals<HtmlSpecTagName>();
         }
         assertHtmlSpecTagName(tagName);
-        assertTypeOf(tagName).toEqualTypeOf<HtmlSpecTagName>();
+        assert.tsType(tagName).equals<HtmlSpecTagName>();
     });
 
     it('properly type guards MathML tags', () => {
         const tagName = 'mmultiscripts' as string;
-        assertTypeOf(ensureMathmlSpecTagName(tagName)).toEqualTypeOf<MathmlSpecTagName>();
+        assert.tsType(ensureMathmlSpecTagName(tagName)).equals<MathmlSpecTagName>();
         if (isMathmlSpecTagName(tagName)) {
-            assertTypeOf(tagName).toEqualTypeOf<MathmlSpecTagName>();
+            assert.tsType(tagName).equals<MathmlSpecTagName>();
         } else {
-            assertTypeOf(tagName).not.toEqualTypeOf<MathmlSpecTagName>();
+            assert.tsType(tagName).notEquals<MathmlSpecTagName>();
         }
         assertMathmlSpecTagName(tagName);
-        assertTypeOf(tagName).toEqualTypeOf<MathmlSpecTagName>();
+        assert.tsType(tagName).equals<MathmlSpecTagName>();
     });
 });

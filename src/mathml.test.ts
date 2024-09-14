@@ -1,13 +1,17 @@
+import {assert} from '@augment-vir/assert';
 import {ArrayElement} from '@augment-vir/common';
-import {assert} from '@open-wc/testing';
-import {assertTypeOf} from 'run-time-assertions';
-import {MathmlSpecTagName, allMathmlSpecTagNames, mathmlSpecConstructorsByTagName} from './mathml';
+import {describe, it} from '@augment-vir/test';
+import {
+    MathmlSpecTagName,
+    allMathmlSpecTagNames,
+    mathmlSpecConstructorsByTagName,
+} from './mathml.js';
 
 describe('mathmlSpecConstructorsByTagName', () => {
     it('has all MathMLElement subclasses for values', () => {
         Object.values(mathmlSpecConstructorsByTagName).forEach((elementConstructor) => {
             /** Ignore sub-classes that don't exist in the current runtime. */
-            if (elementConstructor == undefined) {
+            if ((elementConstructor as typeof elementConstructor | undefined) == undefined) {
                 return;
             }
 
@@ -22,20 +26,18 @@ describe('mathmlSpecConstructorsByTagName', () => {
     it('has strict value types', () => {
         const spanConstructor = mathmlSpecConstructorsByTagName['mo'];
 
-        assertTypeOf(spanConstructor).toEqualTypeOf(MathMLElement);
-        assert.strictEqual(spanConstructor, MathMLElement);
+        assert.tsType(spanConstructor).equals(MathMLElement);
+        assert.strictEquals(spanConstructor, MathMLElement);
     });
 });
 
 describe('allMathmlSpecTagNames', () => {
     it('has only keys from mathmlSpecConstructorsByTagName', () => {
-        assert.hasAllKeys(mathmlSpecConstructorsByTagName, allMathmlSpecTagNames);
+        assert.hasKeys(mathmlSpecConstructorsByTagName, allMathmlSpecTagNames);
     });
 
     it('matches MathmlSpecTagName', () => {
-        assertTypeOf<
-            ArrayElement<typeof allMathmlSpecTagNames>
-        >().toEqualTypeOf<MathmlSpecTagName>();
+        assert.tsType<ArrayElement<typeof allMathmlSpecTagNames>>().equals<MathmlSpecTagName>();
     });
 });
 
@@ -47,8 +49,8 @@ describe('MathmlSpecTagName', () => {
     });
 
     it('is not just plain string type', () => {
-        assertTypeOf<MathmlSpecTagName>().not.toEqualTypeOf<string>();
+        assert.tsType<MathmlSpecTagName>().notEquals<string>();
         // but it is a subset of string
-        assertTypeOf<MathmlSpecTagName>().toMatchTypeOf<string>();
+        assert.tsType<MathmlSpecTagName>().matches<string>();
     });
 });

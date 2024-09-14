@@ -1,9 +1,12 @@
-import {PropertyValueType, isTruthy, typedArrayIncludes, wrapInTry} from '@augment-vir/common';
-import {AssertionError, assertRunTimeType, isRunTimeType} from 'run-time-assertions';
-import {HtmlSpecTagName, allHtmlSpecTagNames, htmlSpecConstructorsByTagName} from './html';
-import {MathmlSpecTagName, allMathmlSpecTagNames, mathmlSpecConstructorsByTagName} from './mathml';
-import {SvgSpecTagName, allSvgSpecTagNames, svgSpecConstructorsByTagName} from './svg';
-import {specTagNameByConstructor} from './tag-name-by-constructor';
+import {AssertionError, assert, check} from '@augment-vir/assert';
+import {wrapInTry, type Values} from '@augment-vir/common';
+import {HtmlSpecTagName, allHtmlSpecTagNames, htmlSpecConstructorsByTagName} from './html.js';
+import {
+    MathmlSpecTagName,
+    allMathmlSpecTagNames,
+    mathmlSpecConstructorsByTagName,
+} from './mathml.js';
+import {SvgSpecTagName, allSvgSpecTagNames, svgSpecConstructorsByTagName} from './svg.js';
 
 /** All possible spec tag names in a single array. */
 export const allSpecTagNames: ReadonlyArray<SpecTagName> = Array.from(
@@ -21,9 +24,9 @@ export type SpecTagName = HtmlSpecTagName | SvgSpecTagName | MathmlSpecTagName;
 
 /** Any of the possible spec tag name constructors. */
 export type SpecTagNameConstructor =
-    | PropertyValueType<typeof htmlSpecConstructorsByTagName>
-    | PropertyValueType<typeof mathmlSpecConstructorsByTagName>
-    | PropertyValueType<typeof svgSpecConstructorsByTagName>;
+    | Values<typeof htmlSpecConstructorsByTagName>
+    | Values<typeof mathmlSpecConstructorsByTagName>
+    | Values<typeof svgSpecConstructorsByTagName>;
 
 /**
  * Get the constructor for the given tag name. Since there are some duplicate tag names, the
@@ -39,9 +42,9 @@ export type SpecTagNameConstructor =
  */
 export function getSpecTagNameConstructor(tagName: SpecTagName): SpecTagNameConstructor {
     const constructor =
-        htmlSpecConstructorsByTagName[tagName as HtmlSpecTagName] ||
-        svgSpecConstructorsByTagName[tagName as SvgSpecTagName] ||
-        mathmlSpecConstructorsByTagName[tagName as MathmlSpecTagName];
+        (htmlSpecConstructorsByTagName as Record<string, SpecTagNameConstructor>)[tagName] ||
+        (svgSpecConstructorsByTagName as Record<string, SpecTagNameConstructor>)[tagName] ||
+        (mathmlSpecConstructorsByTagName as Record<string, SpecTagNameConstructor>)[tagName];
 
     if (!constructor) {
         throw new TypeError(`Found no constructor for tag name '${tagName}'`);
@@ -52,13 +55,15 @@ export function getSpecTagNameConstructor(tagName: SpecTagName): SpecTagNameCons
 
 /** Type guards the input as a valid spec tag name. */
 export function isSpecTagName(input: unknown): input is SpecTagName {
-    return wrapInTry({
-        callback() {
+    return wrapInTry(
+        () => {
             assertSpecTagName(input);
             return true;
         },
-        fallbackValue: false,
-    });
+        {
+            fallbackValue: false,
+        },
+    );
 }
 
 /** Asserts that the input as a valid spec tag name. */
@@ -66,17 +71,10 @@ export function assertSpecTagName(
     input: unknown,
     failureMessage?: string | undefined,
 ): asserts input is SpecTagName {
-    assertRunTimeType(input, 'string', failureMessage);
+    assert.isString(input, failureMessage);
 
-    if (!typedArrayIncludes(allSpecTagNames, input)) {
-        throw new AssertionError(
-            [
-                `'${input}' is not tag name`,
-                failureMessage,
-            ]
-                .filter(isTruthy)
-                .join(': '),
-        );
+    if (!check.hasValue(allSpecTagNames, input)) {
+        throw new AssertionError(`'${input}' is not tag name`, failureMessage);
     }
 }
 
@@ -84,25 +82,11 @@ export function assertSpecTagName(
 export function ensureSpecTagName(input: unknown): SpecTagName {
     if (isSpecTagName(input)) {
         return input;
-    } else if (!isRunTimeType(input, 'string')) {
-        throw new Error(
+    } else if (check.isString(input)) {
+        throw new TypeError(`'${input}' is not a valid tag name.`);
+    } else {
+        throw new TypeError(
             `'${JSON.stringify(input)}' is not a string, it cannot be a valid tag name.`,
         );
-    } else {
-        throw new Error(`'${input}' is not a valid tag name.`);
     }
-}
-
-/**
- * Get a spec tag name from the given constructor. Note that some constructors match multiple tags
- * so you might get an unexpected output here.
- */
-export function getSpecTagNameFromConstructor(constructor: SpecTagNameConstructor): SpecTagName {
-    const tagName = specTagNameByConstructor.get(constructor);
-
-    if (!tagName) {
-        throw new TypeError(`'${constructor.name}' is not a valid spec tag name constructor.`);
-    }
-
-    return tagName;
 }

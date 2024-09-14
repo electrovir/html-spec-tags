@@ -1,26 +1,23 @@
-import {FunctionTestCase, itCases} from '@augment-vir/browser-testing';
-import {getObjectTypedEntries, typedArrayIncludes} from '@augment-vir/common';
-import {assert} from '@open-wc/testing';
-import {AssertionError, assertTypeOf} from 'run-time-assertions';
+import {AssertionError, assert, check} from '@augment-vir/assert';
+import {stringify} from '@augment-vir/common';
+import {describe, it, itCases} from '@augment-vir/test';
 import {
     SpecTagName,
-    SpecTagNameConstructor,
     allSpecTagNames,
     assertSpecTagName,
     ensureSpecTagName,
     getSpecTagNameConstructor,
-    getSpecTagNameFromConstructor,
     isSpecTagName,
-} from './all-tags';
-import {isHtmlSpecTagName, isMathmlSpecTagName, isSvgSpecTagName} from './assertions';
-import {HtmlSpecTagName, allHtmlSpecTagNames, htmlSpecConstructorsByTagName} from './html';
-import {allMathmlSpecTagNames, mathmlSpecConstructorsByTagName} from './mathml';
-import {SvgSpecTagName, allSvgSpecTagNames, svgSpecConstructorsByTagName} from './svg';
+} from './all-tags.js';
+import {isHtmlSpecTagName, isMathmlSpecTagName, isSvgSpecTagName} from './assertions.js';
+import {HtmlSpecTagName, allHtmlSpecTagNames} from './html.js';
+import {allMathmlSpecTagNames} from './mathml.js';
+import {SvgSpecTagName, allSvgSpecTagNames} from './svg.js';
 
 describe('SpecTagName', () => {
     it('matches SVG and HTML spec tag names', () => {
-        assertTypeOf<HtmlSpecTagName>().toMatchTypeOf<SpecTagName>();
-        assertTypeOf<SvgSpecTagName>().toMatchTypeOf<SpecTagName>();
+        assert.tsType<HtmlSpecTagName>().matches<SpecTagName>();
+        assert.tsType<SvgSpecTagName>().matches<SpecTagName>();
     });
 });
 
@@ -28,9 +25,9 @@ describe('allSpecTagNames', () => {
     it('includes HTML and SVG tag names', () => {
         allSpecTagNames.forEach((tagName) => {
             const included =
-                typedArrayIncludes(allHtmlSpecTagNames, tagName) ||
-                typedArrayIncludes(allMathmlSpecTagNames, tagName) ||
-                typedArrayIncludes(allSvgSpecTagNames, tagName);
+                check.hasValue(allHtmlSpecTagNames, tagName) ||
+                check.hasValue(allMathmlSpecTagNames, tagName) ||
+                check.hasValue(allSvgSpecTagNames, tagName);
             assert.isTrue(included, `${tagName} was not found in all HTML or SVG tag names.`);
 
             const matches =
@@ -51,34 +48,37 @@ describe('spec tag name assertions', () => {
         });
     });
 
-    const testCases: ReadonlyArray<Readonly<{input: unknown; valid: boolean}>> = [
-        {
-            input: 'img',
-            valid: true,
-        },
-        {
-            input: 'ellipse',
-            valid: true,
-        },
-        {
-            input: 'mo',
-            valid: true,
-        },
-        {
-            input: 'hello there',
-            valid: false,
-        },
-        {
-            input: {tagName: 'mo'},
-            valid: false,
-        },
-    ];
+    const testCases: ReadonlyArray<Readonly<{input: string | {tagName: string}; valid: boolean}>> =
+        [
+            {
+                input: 'img',
+                valid: true,
+            },
+            {
+                input: 'ellipse',
+                valid: true,
+            },
+            {
+                input: 'mo',
+                valid: true,
+            },
+            {
+                input: 'hello there',
+                valid: false,
+            },
+            {
+                input: {tagName: 'mo'},
+                valid: false,
+            },
+        ];
 
     itCases(
         isSpecTagName,
         testCases.map((testCase) => {
             return {
-                it: testCase.valid ? `accepts '${testCase.input}'` : `rejects '${testCase.input}'`,
+                it: testCase.valid
+                    ? `accepts '${stringify(testCase.input)}'`
+                    : `rejects '${stringify(testCase.input)}'`,
                 input: testCase.input,
                 expect: testCase.valid,
             } as const;
@@ -89,9 +89,11 @@ describe('spec tag name assertions', () => {
         assertSpecTagName,
         testCases.map((testCase) => {
             return {
-                it: testCase.valid ? `accepts '${testCase.input}'` : `rejects '${testCase.input}'`,
+                it: testCase.valid
+                    ? `accepts '${stringify(testCase.input)}'`
+                    : `rejects '${stringify(testCase.input)}'`,
                 inputs: [testCase.input],
-                throws: testCase.valid ? undefined : AssertionError,
+                throws: testCase.valid ? undefined : {matchConstructor: AssertionError},
             } as const;
         }),
     );
@@ -100,9 +102,11 @@ describe('spec tag name assertions', () => {
         ensureSpecTagName,
         testCases.map((testCase) => {
             return {
-                it: testCase.valid ? `accepts '${testCase.input}'` : `rejects '${testCase.input}'`,
+                it: testCase.valid
+                    ? `accepts '${stringify(testCase.input)}'`
+                    : `rejects '${stringify(testCase.input)}'`,
                 input: testCase.input,
-                throws: testCase.valid ? undefined : Error,
+                throws: testCase.valid ? undefined : {matchConstructor: Error},
             } as const;
         }),
     );
@@ -134,42 +138,7 @@ describe(getSpecTagNameConstructor.name, () => {
             it: 'rejects an invalid tag',
             // @ts-expect-error: this is intentionally not a valid tag
             input: 'not a valid tag',
-            throws: TypeError,
+            throws: {matchConstructor: TypeError},
         },
-    ]);
-});
-describe(getSpecTagNameFromConstructor.name, () => {
-    const constructorEntries: [SpecTagName, SpecTagNameConstructor][] = [
-        getObjectTypedEntries(htmlSpecConstructorsByTagName),
-        getObjectTypedEntries(mathmlSpecConstructorsByTagName),
-        getObjectTypedEntries(svgSpecConstructorsByTagName),
-    ].flat();
-
-    assert.isAbove(constructorEntries.length, 0, 'needs some test cases');
-
-    const constructorEntryTestCases: ReadonlyArray<
-        FunctionTestCase<typeof getSpecTagNameFromConstructor>
-    > = constructorEntries.map(
-        ([
-            tagName,
-            constructor,
-        ]) => {
-            return {
-                it: `works for '${constructor.name}'`,
-                input: constructor,
-                /** Don't compare the tag name because some constructors match multiple tag names. */
-                throws: undefined,
-            };
-        },
-    );
-
-    itCases(getSpecTagNameFromConstructor, [
-        {
-            it: 'errors on invalid constructor',
-            // @ts-expect-error: intentionally use invalid constructor
-            input: RegExp,
-            throws: TypeError,
-        },
-        ...constructorEntryTestCases,
     ]);
 });
