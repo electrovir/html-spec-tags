@@ -2,7 +2,7 @@ import {AssertionError, assert, check} from '@augment-vir/assert';
 import {stringify} from '@augment-vir/common';
 import {describe, it, itCases} from '@augment-vir/test';
 import {
-    SpecTagName,
+    type SpecTagName,
     allSpecTagNames,
     assertSpecTagName,
     ensureSpecTagName,
@@ -10,9 +10,9 @@ import {
     isSpecTagName,
 } from './all-tags.js';
 import {isHtmlSpecTagName, isMathmlSpecTagName, isSvgSpecTagName} from './assertions.js';
-import {HtmlSpecTagName, allHtmlSpecTagNames} from './html.js';
+import {type HtmlSpecTagName, allHtmlSpecTagNames} from './html.js';
 import {allMathmlSpecTagNames} from './mathml.js';
-import {SvgSpecTagName, allSvgSpecTagNames} from './svg.js';
+import {type SvgSpecTagName, allSvgSpecTagNames} from './svg.js';
 
 describe('SpecTagName', () => {
     it('matches SVG and HTML spec tag names', () => {

@@ -1,8 +1,8 @@
 import {assert} from '@augment-vir/assert';
-import {ArrayElement} from '@augment-vir/common';
+import {type ArrayElement} from '@augment-vir/common';
 import {describe, it} from '@augment-vir/test';
 import {
-    MathmlSpecTagName,
+    type MathmlSpecTagName,
     allMathmlSpecTagNames,
     mathmlSpecConstructorsByTagName,
 } from './mathml.js';

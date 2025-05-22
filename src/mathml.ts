@@ -1,6 +1,10 @@
-import {Constructor} from 'type-fest';
+import {type Constructor} from 'type-fest';
 
-/** A string literal type that only matches the MathML spec tag names. */
+/**
+ * A string literal type that only matches the MathML spec tag names.
+ *
+ * @category Tag
+ */
 export type MathmlSpecTagName = keyof typeof mathmlSpecConstructorsByTagName;
 
 /**
@@ -8,6 +12,8 @@ export type MathmlSpecTagName = keyof typeof mathmlSpecConstructorsByTagName;
  *
  * Generated from `MathMLElementTagNameMap` in `typescript/lib/lib.dom.d.ts`:
  * https://raw.githubusercontent.com/microsoft/TypeScript/main/src/lib/dom.generated.d.ts
+ *
+ * @category Tag
  */
 export const mathmlSpecConstructorsByTagName = {
     annotation: window.MathMLElement,
@@ -42,7 +48,11 @@ export const mathmlSpecConstructorsByTagName = {
     semantics: window.MathMLElement,
 } as const satisfies Readonly<Record<string, Constructor<MathMLElement>>>;
 
-/** All possible MathML spec tag names within a single array. */
+/**
+ * All possible MathML spec tag names within a single array.
+ *
+ * @category Tag
+ */
 export const allMathmlSpecTagNames: ReadonlyArray<MathmlSpecTagName> = Object.keys(
     mathmlSpecConstructorsByTagName,
 ) as ReadonlyArray<MathmlSpecTagName>;

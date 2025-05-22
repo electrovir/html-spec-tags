@@ -1,7 +1,7 @@
 import {assert} from '@augment-vir/assert';
-import {ArrayElement} from '@augment-vir/common';
+import {type ArrayElement} from '@augment-vir/common';
 import {describe, it} from '@augment-vir/test';
-import {HtmlSpecTagName, allHtmlSpecTagNames, htmlSpecConstructorsByTagName} from './html.js';
+import {type HtmlSpecTagName, allHtmlSpecTagNames, htmlSpecConstructorsByTagName} from './html.js';
 
 describe('htmlSpecConstructorsByTagName', () => {
     it('has all HTMLElement subclasses for values', () => {

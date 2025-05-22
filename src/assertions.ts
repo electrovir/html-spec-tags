@@ -1,11 +1,16 @@
 import {assert, AssertionError, check} from '@augment-vir/assert';
 import {wrapInTry} from '@augment-vir/common';
-import {Constructor} from 'type-fest';
+import {type Constructor} from 'type-fest';
 import {htmlSpecConstructorsByTagName} from './html.js';
 import {mathmlSpecConstructorsByTagName} from './mathml.js';
 import {svgSpecConstructorsByTagName} from './svg.js';
 
-type SpecAsserter<ConstructorMap extends Readonly<Record<string, Constructor<Element>>>> = (
+/**
+ * Used to define spec assertions.
+ *
+ * @category Internal
+ */
+export type SpecAsserter<ConstructorMap extends Readonly<Record<string, Constructor<Element>>>> = (
     input: unknown,
     failureMessage?: string | undefined,
 ) => asserts input is keyof ConstructorMap;
@@ -58,26 +63,62 @@ const svgAsserters = createAsserters(svgSpecConstructorsByTagName, 'SVG');
 const htmlAsserters = createAsserters(htmlSpecConstructorsByTagName, 'HTML');
 const mathmlAsserters = createAsserters(mathmlSpecConstructorsByTagName, 'MathML');
 
-/** Type guards the input as a valid SVG spec tag name. */
+/**
+ * Type guards the input as a valid SVG spec tag name.
+ *
+ * @category Assertion
+ */
 export const isSvgSpecTagName = svgAsserters.typeGuard;
-/** Asserts that the input as a valid SVG spec tag name. */
+/**
+ * Asserts that the input as a valid SVG spec tag name.
+ *
+ * @category Assertion
+ */
 export const assertSvgSpecTagName: SpecAsserter<typeof svgSpecConstructorsByTagName> =
     svgAsserters.assertTypeGuard;
-/** Passes the input through if it's a valid SVG spec tag name. Throws an error if not. */
+/**
+ * Passes the input through if it's a valid SVG spec tag name. Throws an error if not.
+ *
+ * @category Assertion
+ */
 export const ensureSvgSpecTagName = svgAsserters.ensureTypeGuard;
 
-/** Type guards the input as a valid SVG spec tag name. */
+/**
+ * Type guards the input as a valid SVG spec tag name.
+ *
+ * @category Assertion
+ */
 export const isHtmlSpecTagName = htmlAsserters.typeGuard;
-/** Asserts that the input as a valid HTML spec tag name. */
+/**
+ * Asserts that the input as a valid HTML spec tag name.
+ *
+ * @category Assertion
+ */
 export const assertHtmlSpecTagName: SpecAsserter<typeof htmlSpecConstructorsByTagName> =
     htmlAsserters.assertTypeGuard;
-/** Passes the input through if it's a valid HTML spec tag name. Throws an error if not. */
+/**
+ * Passes the input through if it's a valid HTML spec tag name. Throws an error if not.
+ *
+ * @category Assertion
+ */
 export const ensureHtmlSpecTagName = htmlAsserters.ensureTypeGuard;
 
-/** Type guards the input as a valid MathML spec tag name. */
+/**
+ * Type guards the input as a valid MathML spec tag name.
+ *
+ * @category Assertion
+ */
 export const isMathmlSpecTagName = mathmlAsserters.typeGuard;
-/** Asserts that the input as a valid MathML spec tag name. */
+/**
+ * Asserts that the input as a valid MathML spec tag name.
+ *
+ * @category Assertion
+ */
 export const assertMathmlSpecTagName: SpecAsserter<typeof mathmlSpecConstructorsByTagName> =
     mathmlAsserters.assertTypeGuard;
-/** Passes the input through if it's a valid MathML spec tag name. Throws an error if not. */
+/**
+ * Passes the input through if it's a valid MathML spec tag name. Throws an error if not.
+ *
+ * @category Assertion
+ */
 export const ensureMathmlSpecTagName = mathmlAsserters.ensureTypeGuard;

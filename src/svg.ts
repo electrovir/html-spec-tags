@@ -1,6 +1,10 @@
-import {Constructor} from 'type-fest';
+import {type Constructor} from 'type-fest';
 
-/** A string literal type that only matches the SVG spec tag names. */
+/**
+ * A string literal type that only matches the SVG spec tag names.
+ *
+ * @category Tag
+ */
 export type SvgSpecTagName = keyof typeof svgSpecConstructorsByTagName;
 
 /**
@@ -8,6 +12,8 @@ export type SvgSpecTagName = keyof typeof svgSpecConstructorsByTagName;
  *
  * Generated from `SVGElementTagNameMap` in `typescript/lib/lib.dom.d.ts`:
  * https://raw.githubusercontent.com/microsoft/TypeScript/main/src/lib/dom.generated.d.ts
+ *
+ * @category Tag
  */
 export const svgSpecConstructorsByTagName = {
     a: window.SVGAElement,
@@ -75,7 +81,11 @@ export const svgSpecConstructorsByTagName = {
     view: window.SVGViewElement,
 } as const satisfies Readonly<Record<string, Constructor<SVGElement>>>;
 
-/** All possible SVG spec tag names within a single array. */
+/**
+ * All possible SVG spec tag names within a single array.
+ *
+ * @category Tag
+ */
 export const allSvgSpecTagNames: ReadonlyArray<SvgSpecTagName> = Object.keys(
     svgSpecConstructorsByTagName,
 ) as ReadonlyArray<SvgSpecTagName>;

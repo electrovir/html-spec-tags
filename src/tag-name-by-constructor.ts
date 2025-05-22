@@ -1,5 +1,5 @@
 import {getObjectTypedEntries} from '@augment-vir/common';
-import {SpecTagName, SpecTagNameConstructor} from './all-tags.js';
+import {type SpecTagName, type SpecTagNameConstructor} from './all-tags.js';
 import {htmlSpecConstructorsByTagName} from './html.js';
 import {mathmlSpecConstructorsByTagName} from './mathml.js';
 import {svgSpecConstructorsByTagName} from './svg.js';
@@ -40,6 +40,7 @@ const constructorEntries: ReadonlyArray<Readonly<[SpecTagNameConstructor, SpecTa
     ),
 ].flat();
 
+/** @category Tag */
 export const specTagNameByConstructor = new Map<SpecTagNameConstructor, SpecTagName>(
     constructorEntries,
 );
@@ -47,6 +48,8 @@ export const specTagNameByConstructor = new Map<SpecTagNameConstructor, SpecTagN
 /**
  * Get a spec tag name from the given constructor. Note that some constructors match multiple tags
  * so you might get an unexpected output here.
+ *
+ * @category Tag
  */
 export function getSpecTagNameFromConstructor(constructor: SpecTagNameConstructor): SpecTagName {
     const tagName = specTagNameByConstructor.get(constructor);

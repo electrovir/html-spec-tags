@@ -1,7 +1,7 @@
 import {assert} from '@augment-vir/assert';
-import {ArrayElement} from '@augment-vir/common';
+import {type ArrayElement} from '@augment-vir/common';
 import {describe, it} from '@augment-vir/test';
-import {SvgSpecTagName, allSvgSpecTagNames, svgSpecConstructorsByTagName} from './svg.js';
+import {type SvgSpecTagName, allSvgSpecTagNames, svgSpecConstructorsByTagName} from './svg.js';
 
 describe('svgSpecConstructorsByTagName', () => {
     it('has all SVGElement subclasses for values', () => {

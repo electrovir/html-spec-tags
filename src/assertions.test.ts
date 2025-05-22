@@ -1,7 +1,7 @@
 import {assert} from '@augment-vir/assert';
 import {getObjectTypedEntries, stringify} from '@augment-vir/common';
 import {describe, it} from '@augment-vir/test';
-import {Constructor} from 'type-fest';
+import {type Constructor} from 'type-fest';
 import {
     assertHtmlSpecTagName,
     assertMathmlSpecTagName,
@@ -13,9 +13,9 @@ import {
     isMathmlSpecTagName,
     isSvgSpecTagName,
 } from './assertions.js';
-import {HtmlSpecTagName, htmlSpecConstructorsByTagName} from './html.js';
-import {MathmlSpecTagName, mathmlSpecConstructorsByTagName} from './mathml.js';
-import {SvgSpecTagName, svgSpecConstructorsByTagName} from './svg.js';
+import {type HtmlSpecTagName, htmlSpecConstructorsByTagName} from './html.js';
+import {type MathmlSpecTagName, mathmlSpecConstructorsByTagName} from './mathml.js';
+import {type SvgSpecTagName, svgSpecConstructorsByTagName} from './svg.js';
 
 type TestCase = {
     tag: string | {not: string};

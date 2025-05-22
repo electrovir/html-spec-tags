@@ -1,6 +1,10 @@
-import {Constructor} from 'type-fest';
+import {type Constructor} from 'type-fest';
 
-/** A string literal type that only matches the HTML spec tag names. */
+/**
+ * A string literal type that only matches the HTML spec tag names.
+ *
+ * @category Tag
+ */
 export type HtmlSpecTagName = keyof typeof htmlSpecConstructorsByTagName;
 
 /**
@@ -8,6 +12,8 @@ export type HtmlSpecTagName = keyof typeof htmlSpecConstructorsByTagName;
  *
  * Generated from `HTMLElementTagNameMap` in `typescript/lib/lib.dom.d.ts`:
  * https://raw.githubusercontent.com/microsoft/TypeScript/main/src/lib/dom.generated.d.ts
+ *
+ * @category Tag
  */
 export const htmlSpecConstructorsByTagName = {
     a: window.HTMLAnchorElement,
@@ -124,7 +130,11 @@ export const htmlSpecConstructorsByTagName = {
     wbr: window.HTMLElement,
 } as const satisfies Readonly<Record<string, Constructor<HTMLElement>>>;
 
-/** All possible HTML spec tag names within a single array. */
+/**
+ * All possible HTML spec tag names within a single array.
+ *
+ * @category Tag
+ */
 export const allHtmlSpecTagNames: ReadonlyArray<HtmlSpecTagName> = Object.keys(
     htmlSpecConstructorsByTagName,
 ) as ReadonlyArray<HtmlSpecTagName>;

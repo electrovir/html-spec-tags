@@ -1,14 +1,18 @@
 import {AssertionError, assert, check} from '@augment-vir/assert';
-import {wrapInTry, type Values} from '@augment-vir/common';
-import {HtmlSpecTagName, allHtmlSpecTagNames, htmlSpecConstructorsByTagName} from './html.js';
+import {type Values, wrapInTry} from '@augment-vir/common';
+import {type HtmlSpecTagName, allHtmlSpecTagNames, htmlSpecConstructorsByTagName} from './html.js';
 import {
-    MathmlSpecTagName,
+    type MathmlSpecTagName,
     allMathmlSpecTagNames,
     mathmlSpecConstructorsByTagName,
 } from './mathml.js';
-import {SvgSpecTagName, allSvgSpecTagNames, svgSpecConstructorsByTagName} from './svg.js';
+import {type SvgSpecTagName, allSvgSpecTagNames, svgSpecConstructorsByTagName} from './svg.js';
 
-/** All possible spec tag names in a single array. */
+/**
+ * All possible spec tag names in a single array.
+ *
+ * @category Tag
+ */
 export const allSpecTagNames: ReadonlyArray<SpecTagName> = Array.from(
     new Set(
         [
@@ -19,10 +23,18 @@ export const allSpecTagNames: ReadonlyArray<SpecTagName> = Array.from(
     ),
 );
 
-/** Any valid spec tag name. */
+/**
+ * Any valid spec tag name.
+ *
+ * @category Tag
+ */
 export type SpecTagName = HtmlSpecTagName | SvgSpecTagName | MathmlSpecTagName;
 
-/** Any of the possible spec tag name constructors. */
+/**
+ * Any of the possible spec tag name constructors.
+ *
+ * @category Tag
+ */
 export type SpecTagNameConstructor =
     | Values<typeof htmlSpecConstructorsByTagName>
     | Values<typeof mathmlSpecConstructorsByTagName>
@@ -39,6 +51,8 @@ export type SpecTagNameConstructor =
  * Meaning, if a tag name is duplicated between HTML and SVG tags, the HTML constructor will be
  * returned. If the lower priority tag constructor is desired these types of situations, use its
  * constructor list directly. For example,use `svgSpecConstructorsByTagName` directly.
+ *
+ * @category Tag
  */
 export function getSpecTagNameConstructor(tagName: SpecTagName): SpecTagNameConstructor {
     const constructor =
@@ -53,7 +67,11 @@ export function getSpecTagNameConstructor(tagName: SpecTagName): SpecTagNameCons
     return constructor;
 }
 
-/** Type guards the input as a valid spec tag name. */
+/**
+ * Type guards the input as a valid spec tag name.
+ *
+ * @category Assertion
+ */
 export function isSpecTagName(input: unknown): input is SpecTagName {
     return wrapInTry(
         () => {
@@ -66,7 +84,11 @@ export function isSpecTagName(input: unknown): input is SpecTagName {
     );
 }
 
-/** Asserts that the input as a valid spec tag name. */
+/**
+ * Asserts that the input as a valid spec tag name.
+ *
+ * @category Assertion
+ */
 export function assertSpecTagName(
     input: unknown,
     failureMessage?: string | undefined,
@@ -78,7 +100,11 @@ export function assertSpecTagName(
     }
 }
 
-/** Passes the input through if it's a valid spec tag name, throws an error if not. */
+/**
+ * Passes the input through if it's a valid spec tag name, throws an error if not.
+ *
+ * @category Assertion
+ */
 export function ensureSpecTagName(input: unknown): SpecTagName {
     if (isSpecTagName(input)) {
         return input;

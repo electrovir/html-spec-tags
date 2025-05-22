@@ -1,7 +1,7 @@
 import {assert, check} from '@augment-vir/assert';
 import {getObjectTypedEntries} from '@augment-vir/common';
 import {describe, itCases, type FunctionTestCase} from '@augment-vir/test';
-import {SpecTagName, type SpecTagNameConstructor} from './all-tags.js';
+import {type SpecTagName, type SpecTagNameConstructor} from './all-tags.js';
 import {htmlSpecConstructorsByTagName} from './html.js';
 import {mathmlSpecConstructorsByTagName} from './mathml.js';
 import {svgSpecConstructorsByTagName} from './svg.js';
