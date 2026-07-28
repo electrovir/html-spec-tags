@@ -1,6 +1,5 @@
 import {assert, AssertionError, check} from '@augment-vir/assert';
-import {wrapInTry} from '@augment-vir/common';
-import {type Constructor} from 'type-fest';
+import {wrapInTry, type Constructor} from '@augment-vir/common';
 import {htmlSpecConstructorsByTagName} from './html.js';
 import {mathmlSpecConstructorsByTagName} from './mathml.js';
 import {svgSpecConstructorsByTagName} from './svg.js';

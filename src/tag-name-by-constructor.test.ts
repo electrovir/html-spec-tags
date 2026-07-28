@@ -8,7 +8,10 @@ import {svgSpecConstructorsByTagName} from './svg.js';
 import {getSpecTagNameFromConstructor} from './tag-name-by-constructor.js';
 
 describe(getSpecTagNameFromConstructor.name, () => {
-    const constructorEntries: [SpecTagName, SpecTagNameConstructor][] = [
+    const constructorEntries: [
+        SpecTagName,
+        SpecTagNameConstructor,
+    ][] = [
         getObjectTypedEntries(htmlSpecConstructorsByTagName),
         getObjectTypedEntries(mathmlSpecConstructorsByTagName),
         getObjectTypedEntries(svgSpecConstructorsByTagName),
@@ -44,7 +47,9 @@ describe(getSpecTagNameFromConstructor.name, () => {
             it: 'errors on invalid constructor',
             // @ts-expect-error: intentionally use invalid constructor
             input: RegExp,
-            throws: {matchConstructor: TypeError},
+            throws: {
+                matchConstructor: TypeError,
+            },
         },
         ...constructorEntryTestCases.filter(check.isTruthy),
     ]);

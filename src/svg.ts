@@ -1,4 +1,4 @@
-import {type Constructor} from 'type-fest';
+import {type Constructor} from '@augment-vir/common';
 
 /**
  * A string literal type that only matches the SVG spec tag names.

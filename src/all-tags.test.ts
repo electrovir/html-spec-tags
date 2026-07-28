@@ -67,7 +67,9 @@ describe('spec tag name assertions', () => {
                 valid: false,
             },
             {
-                input: {tagName: 'mo'},
+                input: {
+                    tagName: 'mo',
+                },
                 valid: false,
             },
         ];
@@ -93,7 +95,11 @@ describe('spec tag name assertions', () => {
                     ? `accepts '${stringify(testCase.input)}'`
                     : `rejects '${stringify(testCase.input)}'`,
                 inputs: [testCase.input],
-                throws: testCase.valid ? undefined : {matchConstructor: AssertionError},
+                throws: testCase.valid
+                    ? undefined
+                    : {
+                          matchConstructor: AssertionError,
+                      },
             } as const;
         }),
     );
@@ -106,7 +112,11 @@ describe('spec tag name assertions', () => {
                     ? `accepts '${stringify(testCase.input)}'`
                     : `rejects '${stringify(testCase.input)}'`,
                 input: testCase.input,
-                throws: testCase.valid ? undefined : {matchConstructor: Error},
+                throws: testCase.valid
+                    ? undefined
+                    : {
+                          matchConstructor: Error,
+                      },
             } as const;
         }),
     );
@@ -138,7 +148,9 @@ describe(getSpecTagNameConstructor.name, () => {
             it: 'rejects an invalid tag',
             // @ts-expect-error: this is intentionally not a valid tag
             input: 'not a valid tag',
-            throws: {matchConstructor: TypeError},
+            throws: {
+                matchConstructor: TypeError,
+            },
         },
     ]);
 });

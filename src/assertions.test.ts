@@ -1,7 +1,6 @@
 import {assert} from '@augment-vir/assert';
-import {getObjectTypedEntries, stringify} from '@augment-vir/common';
+import {type Constructor, getObjectTypedEntries, stringify} from '@augment-vir/common';
 import {describe, it} from '@augment-vir/test';
-import {type Constructor} from 'type-fest';
 import {
     assertHtmlSpecTagName,
     assertMathmlSpecTagName,
@@ -36,13 +35,33 @@ const testCases: Readonly<
 > = {
     svg: {
         testCases: [
-            {tag: 'ellipse', valid: true},
-            {tag: 'svg', valid: true},
+            {
+                tag: 'ellipse',
+                valid: true,
+            },
+            {
+                tag: 'svg',
+                valid: true,
+            },
 
-            {tag: 'hello there', valid: false},
-            {tag: 'mspace', valid: false},
-            {tag: 'h1', valid: false},
-            {tag: {not: 'a string'}, valid: false},
+            {
+                tag: 'hello there',
+                valid: false,
+            },
+            {
+                tag: 'mspace',
+                valid: false,
+            },
+            {
+                tag: 'h1',
+                valid: false,
+            },
+            {
+                tag: {
+                    not: 'a string',
+                },
+                valid: false,
+            },
         ],
         typeGuard: isSvgSpecTagName,
         asserter: assertSvgSpecTagName,
@@ -51,13 +70,33 @@ const testCases: Readonly<
     },
     html: {
         testCases: [
-            {tag: 'h1', valid: true},
-            {tag: 'html', valid: true},
+            {
+                tag: 'h1',
+                valid: true,
+            },
+            {
+                tag: 'html',
+                valid: true,
+            },
 
-            {tag: 'hello there', valid: false},
-            {tag: 'mspace', valid: false},
-            {tag: 'ellipse', valid: false},
-            {tag: {not: 'a string'}, valid: false},
+            {
+                tag: 'hello there',
+                valid: false,
+            },
+            {
+                tag: 'mspace',
+                valid: false,
+            },
+            {
+                tag: 'ellipse',
+                valid: false,
+            },
+            {
+                tag: {
+                    not: 'a string',
+                },
+                valid: false,
+            },
         ],
         typeGuard: isHtmlSpecTagName,
         asserter: assertHtmlSpecTagName,
@@ -66,13 +105,33 @@ const testCases: Readonly<
     },
     mathml: {
         testCases: [
-            {tag: 'mspace', valid: true},
-            {tag: 'math', valid: true},
+            {
+                tag: 'mspace',
+                valid: true,
+            },
+            {
+                tag: 'math',
+                valid: true,
+            },
 
-            {tag: 'hello there', valid: false},
-            {tag: 'h1', valid: false},
-            {tag: 'ellipse', valid: false},
-            {tag: {not: 'a string'}, valid: false},
+            {
+                tag: 'hello there',
+                valid: false,
+            },
+            {
+                tag: 'h1',
+                valid: false,
+            },
+            {
+                tag: 'ellipse',
+                valid: false,
+            },
+            {
+                tag: {
+                    not: 'a string',
+                },
+                valid: false,
+            },
         ],
         typeGuard: isMathmlSpecTagName,
         asserter: assertMathmlSpecTagName,

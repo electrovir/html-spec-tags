@@ -4,12 +4,24 @@ import {htmlSpecConstructorsByTagName} from './html.js';
 import {mathmlSpecConstructorsByTagName} from './mathml.js';
 import {svgSpecConstructorsByTagName} from './svg.js';
 
-const constructorEntries: ReadonlyArray<Readonly<[SpecTagNameConstructor, SpecTagName]>> = [
+const constructorEntries: ReadonlyArray<
+    Readonly<
+        [
+            SpecTagNameConstructor,
+            SpecTagName,
+        ]
+    >
+> = [
     getObjectTypedEntries(htmlSpecConstructorsByTagName).map(
         ([
             tagName,
             constructor,
-        ]): Readonly<[SpecTagNameConstructor, SpecTagName]> => {
+        ]): Readonly<
+            [
+                SpecTagNameConstructor,
+                SpecTagName,
+            ]
+        > => {
             return [
                 constructor,
                 tagName,
@@ -20,7 +32,12 @@ const constructorEntries: ReadonlyArray<Readonly<[SpecTagNameConstructor, SpecTa
         ([
             tagName,
             constructor,
-        ]): Readonly<[SpecTagNameConstructor, SpecTagName]> => {
+        ]): Readonly<
+            [
+                SpecTagNameConstructor,
+                SpecTagName,
+            ]
+        > => {
             return [
                 constructor,
                 tagName,
@@ -31,7 +48,12 @@ const constructorEntries: ReadonlyArray<Readonly<[SpecTagNameConstructor, SpecTa
         ([
             tagName,
             constructor,
-        ]): Readonly<[SpecTagNameConstructor, SpecTagName]> => {
+        ]): Readonly<
+            [
+                SpecTagNameConstructor,
+                SpecTagName,
+            ]
+        > => {
             return [
                 constructor,
                 tagName,
